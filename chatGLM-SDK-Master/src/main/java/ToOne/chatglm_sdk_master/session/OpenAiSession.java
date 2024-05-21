@@ -1,9 +1,11 @@
 package ToOne.chatglm_sdk_master.session;
 
+import ToOne.chatglm_sdk_master.model.ChatCompletionResponse;
 import ToOne.chatglm_sdk_master.model.ChatCompletionSSERequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import okhttp3.sse.EventSource;
-import okhttp3.sse.EventSourceListener;
+
+import java.io.IOException;
 
 /**
  * @className: OpenAiSession
@@ -13,6 +15,9 @@ import okhttp3.sse.EventSourceListener;
  * @description: 定义会话服务api
  */
 public interface OpenAiSession {
+      /**
+         *  des: 同步调用
+         * */
 
-    EventSource completions(ChatCompletionSSERequest chatCompletionRequest, EventSourceListener eventSourceListener) throws JsonProcessingException;
+    ChatCompletionResponse completionsSync(ChatCompletionSSERequest chatCompletionRequest) throws IOException;
 }

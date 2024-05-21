@@ -1,16 +1,16 @@
 package ToOne.chatglm_sdk_master.session.defaults;
 
 import ToOne.chatglm_sdk_master.IOpenAiApi;
+import ToOne.chatglm_sdk_master.model.ChatCompletionResponse;
 import ToOne.chatglm_sdk_master.model.ChatCompletionSSERequest;
 import ToOne.chatglm_sdk_master.session.Configuration;
 import ToOne.chatglm_sdk_master.session.OpenAiSession;
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import okhttp3.MediaType;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
+import okhttp3.*;
 import okhttp3.sse.EventSource;
-import okhttp3.sse.EventSourceListener;
+
+import java.io.IOException;
 
 /**
  * @className: DefaultOpenAiSession
@@ -36,11 +36,18 @@ public class DefaultOpenAiSession implements OpenAiSession {
     }
 
     @Override
-    public EventSource completions(ChatCompletionSSERequest chatCompletionRequest, EventSourceListener eventSourceListener) throws JsonProcessingException {
+    public ChatCompletionResponse completionsSync(ChatCompletionSSERequest chatCompletionRequest) throws IOException {
         Request request = new Request.Builder()
                 .url(configuration.getApiHost().concat(IOpenAiApi.v4_completions))
-                .post(RequestBody.create(MediaType.parse(Configuration.APPLICATION_JSON), chatCompletionRequest.toString()))
+                .post(RequestBody.create(MediaType.parse(Configuration.JSON_CONTENT_TYPE), chatCompletionRequest.toString()))
                 .build();
-        return factory.newEventSource(request,eventSourceListener);
+
+        OkHttpClient okHttpClient = configuration.getOkHttpClient();
+        Response response = okHttpClient.newCall(request).execute();
+        if(!response.isSuccessful()){
+            throw new RuntimeException("Request failed");
+        }
+        return JSON.parseObject(response.body().string(), ChatCompletionResponse.class);
+
     }
 }

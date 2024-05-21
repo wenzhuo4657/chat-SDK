@@ -48,11 +48,12 @@ public class ChatCompletionSSERequest {
     /**
      * 型输出最大 tokens，最大输出为8192，默认值为1024
     * */
-    private Integer max_tokens=1024;
+    private Integer max_tokens=8192;
 
-    /**
-     * 型输出最大 tokens，最大输出为8192，默认值为1024
-     * */
+
+      /**
+         *  des: 模型在遇到stop所制定的字符时将停止生成，目前仅支持单个停止词，格式为["stop_word1"]
+         * */
     private List<String> stop;
 
 
@@ -67,12 +68,22 @@ public class ChatCompletionSSERequest {
  *   暂时仅支持System message、User message，根据role字段进行区分
  */
     private  List<Message> messages;
+//    sse调用填否
+    private boolean stream=false;
 
     {
         stop = new ArrayList();
         stop.add("stop_word1");
         messages=new ArrayList<>();
   }
+
+    public void setStream(boolean stream) {
+        this.stream = stream;
+    }
+
+    public boolean isStream() {
+        return stream;
+    }
 
     @Data
     @Builder
@@ -81,20 +92,60 @@ public class ChatCompletionSSERequest {
     public static class Message{
         private String role;
         private String content;
+
+        public static MessageBuilder builder(){
+            return new MessageBuilder();
+        }
+
+        public  static class MessageBuilder {
+            private String role;
+            private String content;
+
+            public MessageBuilder() {
+            }
+
+            public MessageBuilder role(String role) {
+                this.role = role;
+                return this;
+            }
+
+            public MessageBuilder content(String content) {
+                this.content = content;
+                return this;
+            }
+
+            public Message build() {
+                return new Message(this.role, this.content);
+            }
+
+
+        }
+
+
+
+
     }
 
 
       @Override
       public String toString() {
-          return "ChatCompletionSSERequest{" +
-                  "model='" + model + '\'' +
-                  ", requestId='" + requestId + '\'' +
-                  ", temperature=" + temperature +
-                  ", topP=" + topP +
-                  ", max_tokens=" + max_tokens +
-                  ", stop=" + stop +
-                  ", user_id='" + user_id + '\'' +
-                  ", messages=" + messages.toString() +
-                  '}';
+        Map<String,Object> params = new HashMap<>();
+        params.put("request_id",requestId);
+        params.put("model",model);
+        params.put("temperature",temperature);
+        params.put("topP", topP);
+        params.put("max_tokens",max_tokens);
+        params.put("stop",stop);
+        params.put("user_id",user_id);
+        params.put("messages",messages);
+        params.put("stream",stream);
+          try {
+              return new ObjectMapper().writeValueAsString(params);
+          } catch (JsonProcessingException e) {
+              log.info("json转换出错{}", e);
+              throw new RuntimeException(e);
+          }
+
+
       }
   }

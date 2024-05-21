@@ -24,11 +24,22 @@ import okhttp3.sse.EventSources;
 public class Configuration {
 
     @Getter
-    private String apiKey;//需要加密的字段
+    private String apiKey;
     @Getter
     private String apiSecret;// 在验证或签名实例中使用的秘密字节
 
+    public void setApiSecretKey(String apiSecretKey) {
+        this.apiSecret = apiSecretKey;
+        String[] arrStr = apiSecretKey.split("\\.");
+        if (arrStr.length != 2) {
+            throw new RuntimeException("invalid apiSecretKey");
+        }
+        this.apiKey = arrStr[0];
+        this.apiSecret = arrStr[1];
+    }
 
+
+    public static final String SSE_CONTENT_TYPE = "text/event-stream";
     public static final String DEFAULT_USER_AGENT = "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)";
     public static final String APPLICATION_JSON = "application/json";
     public static final String JSON_CONTENT_TYPE = APPLICATION_JSON + "; charset=utf-8";
@@ -37,6 +48,9 @@ public class Configuration {
     @Getter
     @Setter
     private String apiHost = "https://open.bigmodel.cn/";//httpClient请求url
+
+    // 智普Ai https://open.bigmodel.cn/usercenter/apikeys - apiSecretKey = {apiKey}.{apiSecret}
+    private String apiSecretKey;
 
 
     @Setter
