@@ -1,8 +1,9 @@
 package ToOne.chatglm_sdk_master.session.defaults;
 
 import ToOne.chatglm_sdk_master.IOpenAiApi;
-import ToOne.chatglm_sdk_master.model.ChatCompletionResponse;
-import ToOne.chatglm_sdk_master.model.ChatCompletionSSERequest;
+
+import ToOne.chatglm_sdk_master.model.RequestSSE;
+import ToOne.chatglm_sdk_master.model.ResponseSync;
 import ToOne.chatglm_sdk_master.session.Configuration;
 import ToOne.chatglm_sdk_master.session.OpenAiSession;
 import com.alibaba.fastjson.JSON;
@@ -36,7 +37,7 @@ public class DefaultOpenAiSession implements OpenAiSession {
     }
 
     @Override
-    public ChatCompletionResponse completionsSync(ChatCompletionSSERequest chatCompletionRequest) throws IOException {
+    public ResponseSync completionsSync(RequestSSE chatCompletionRequest) throws IOException {
         Request request = new Request.Builder()
                 .url(configuration.getApiHost().concat(IOpenAiApi.v4_completions))
                 .post(RequestBody.create(MediaType.parse(Configuration.JSON_CONTENT_TYPE), chatCompletionRequest.toString()))
@@ -47,7 +48,7 @@ public class DefaultOpenAiSession implements OpenAiSession {
         if(!response.isSuccessful()){
             throw new RuntimeException("Request failed");
         }
-        return JSON.parseObject(response.body().string(), ChatCompletionResponse.class);
+        return JSON.parseObject(response.body().string(), ResponseSync.class);
 
     }
 }

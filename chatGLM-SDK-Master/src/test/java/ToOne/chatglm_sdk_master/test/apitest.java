@@ -1,8 +1,7 @@
 package ToOne.chatglm_sdk_master.test;
 
-import ToOne.chatglm_sdk_master.model.ChatCompletionResponse;
-import ToOne.chatglm_sdk_master.model.ChatCompletionSSERequest;
-import ToOne.chatglm_sdk_master.model.EventType;
+import ToOne.chatglm_sdk_master.model.RequestSSE;
+import ToOne.chatglm_sdk_master.model.ResponseSync;
 import ToOne.chatglm_sdk_master.model.Role;
 import ToOne.chatglm_sdk_master.session.Configuration;
 import ToOne.chatglm_sdk_master.session.OpenAiSession;
@@ -12,11 +11,7 @@ import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
-import okhttp3.sse.EventSource;
-import okhttp3.sse.EventSourceListener;
-import org.jetbrains.annotations.Nullable;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -53,7 +48,7 @@ public class apitest {
       @Test
       public void test_SSE_sync() throws JsonProcessingException, InterruptedException {
           CountDownLatch countDownLatch = new CountDownLatch(1);
-          ChatCompletionSSERequest request=new ChatCompletionSSERequest();
+          RequestSSE request=new RequestSSE();
           request.setStream(false);
           request.setMessages(
 
@@ -62,7 +57,7 @@ public class apitest {
                    * 2，代码块初始化实例， add方法被继承到此类中所以无需添加前缀，、
                    *
                    * */
-                  new ArrayList<ChatCompletionSSERequest.Message>(){
+                  new ArrayList<RequestSSE.Message>(){
 
                         /**
                            *  des: 当一个类实现了 Serializable 接口以支持序列化和反序列化操作时，JVM会使用这个serialVersionUID来确保类的兼容
@@ -75,15 +70,15 @@ public class apitest {
                            * */
                       private static final long serialVersionUID = -7988151926241837899L;
                       {
-                          add(ChatCompletionSSERequest.Message.builder()
+                          add(RequestSSE.Message.builder()
                                   .role(Role.user.getCode())
-                                  .content("写个java冒泡排序")
+                                  .content("jdk中存在哪些编译器")
                                   .build());
                       }
                   }
           );
           // 请求
-          ChatCompletionResponse response = session.completionsSync(request);
+          ResponseSync response = session.completionsSync(request);
 
           log.info("测试结果：{}", JSON.toJSONString(response));
       }

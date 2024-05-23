@@ -1,8 +1,9 @@
 package ToOne.chatglm_sdk_master;
 
 
-import ToOne.chatglm_sdk_master.model.ChatCompletionResponse;
-import ToOne.chatglm_sdk_master.model.ChatCompletionSSERequest;
+
+import ToOne.chatglm_sdk_master.model.RequestSSE;
+import ToOne.chatglm_sdk_master.model.ResponseSync;
 import io.reactivex.Single;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
@@ -19,7 +20,7 @@ public interface IOpenAiApi {
     String v4_completions = "api/paas/v4/chat/completions";
 
     @POST(v4_completions)
-    Single<ChatCompletionResponse> completions(@Body ChatCompletionSSERequest chatCompletionRequest);
+    Single<ResponseSync> completions(@Body RequestSSE chatCompletionRequest);
 
 
 }

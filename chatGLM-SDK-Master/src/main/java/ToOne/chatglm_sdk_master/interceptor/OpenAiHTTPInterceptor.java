@@ -15,7 +15,7 @@ import java.io.IOException;
  * @author: wenzhuo4657
  * @date: 2024/5/20 17:34
  * @Version: 1.0
- * @description: HTTP用户鉴权,使用jwt
+ * @description: HTTP用户鉴权,使用jwt,在请求发送前进行
  */
 public class OpenAiHTTPInterceptor implements Interceptor {
 
@@ -33,7 +33,6 @@ public class OpenAiHTTPInterceptor implements Interceptor {
                 .header("Authorization", "Bearer " + BearerTokenUtils.getToken(configuration.getApiKey(), configuration.getApiSecret()))
                 .header("Content-Type", Configuration.JSON_CONTENT_TYPE)
                 .header("User-Agent", Configuration.DEFAULT_USER_AGENT)
-//                .header("Accept", Configuration.SSE_CONTENT_TYPE)
                 .method(orgin.method(), orgin.body())
                 .build();
         return chain.proceed(request);

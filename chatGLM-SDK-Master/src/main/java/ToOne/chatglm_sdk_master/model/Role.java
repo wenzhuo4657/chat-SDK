@@ -11,9 +11,16 @@ public enum Role {
      */
     user("user"),
     /**
-     *  System message
+     * 模型生成的内容，role位assistant
      */
-    assistant("system"),
+    assistant("assistant"),
+
+    /**
+     * 系统
+     */
+    system("system"),
+
+    ;
     ;
     private final String code;
 

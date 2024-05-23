@@ -1,9 +1,7 @@
 package ToOne.chatglm_sdk_master.session;
 
-import ToOne.chatglm_sdk_master.model.ChatCompletionResponse;
-import ToOne.chatglm_sdk_master.model.ChatCompletionSSERequest;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import okhttp3.sse.EventSource;
+import ToOne.chatglm_sdk_master.model.RequestSSE;
+import ToOne.chatglm_sdk_master.model.ResponseSync;
 
 import java.io.IOException;
 
@@ -19,5 +17,5 @@ public interface OpenAiSession {
          *  des: 同步调用
          * */
 
-    ChatCompletionResponse completionsSync(ChatCompletionSSERequest chatCompletionRequest) throws IOException;
+    ResponseSync completionsSync(RequestSSE chatCompletionRequest) throws IOException;
 }

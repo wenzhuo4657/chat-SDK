@@ -4,25 +4,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
-
+  /**
+     *  des: 同步响应
+     * */
 @Data
-public class ChatCompletionResponse {
-
-    private String id;
-    /**
-     * 处理状态，PROCESSING（处理中），SUCCESS（成功），FAIL（失败）
-     * 注：处理中状态需通过查询获取结果
-     * */
-    private Long task_status;
+public class ResponseSync {
+    private  String id;
+    private  Long created;
     private String model;
-
-    /**
-     * 用户在客户端请求时提交的任务编号或者平台生成的任务编号
-     * */
-    private String request_id;
-    private List<Choice> choices;
+    private  List<Choice> choices;
     private Usage usage;
-
+    private  List<web_Search> web_search;
 
     @Data
     public static class Choice {
@@ -48,5 +40,19 @@ public class ChatCompletionResponse {
         private int prompt_tokens;
         private int total_tokens;
     }
+
+    @Data
+    public  static  class web_Search{
+        private  String icon;
+        private  String title;
+        private  String link;
+        private  String media;
+        private  String content;
+
+    }
+
+
+
+
 
 }

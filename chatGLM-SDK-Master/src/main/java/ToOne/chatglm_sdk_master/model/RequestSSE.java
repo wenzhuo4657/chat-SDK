@@ -23,7 +23,7 @@ import java.util.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatCompletionSSERequest {
+public class RequestSSE {
 
     /**
      * 模型
