@@ -1,6 +1,7 @@
 package ToOne.chatglm_sdk_master.test;
 
 import ToOne.chatglm_sdk_master.model.RequestSSE;
+import ToOne.chatglm_sdk_master.model.ResponseStream;
 import ToOne.chatglm_sdk_master.model.ResponseSync;
 import ToOne.chatglm_sdk_master.model.Role;
 import ToOne.chatglm_sdk_master.session.Configuration;
@@ -11,10 +12,16 @@ import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.sse.EventSource;
+import okhttp3.sse.EventSourceListener;
+import org.checkerframework.checker.units.qual.A;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
@@ -41,7 +48,7 @@ public class apitest {
     }
 
       /**
-         *  des: sse调用
+         *  des: sse同步调用
          * */
 
       @SneakyThrows
@@ -82,6 +89,58 @@ public class apitest {
 
           log.info("测试结果：{}", JSON.toJSONString(response));
       }
+
+        /**
+           *  des: 流式调用
+           * */
+
+
+        @Test
+        public void test_SSE_stream() throws IOException, InterruptedException {
+            CountDownLatch countDownLatch = new CountDownLatch(1);
+            RequestSSE request = new RequestSSE();
+            request.setStream(true);
+            request.setMessages(new ArrayList<RequestSSE.Message>(){
+
+                private static final long serialVersionUID = -7988151926241837892L;
+                {
+                    add(RequestSSE.Message.builder()
+                            .role(Role.user.getCode())
+                            .content("jdk中存在哪些编译器")
+                            .build());
+                }
+
+            });
+
+            session.completionsStream(request, new EventSourceListener() {
+                @Override
+                public void onEvent(EventSource eventSource, @Nullable String id, @Nullable String type, String data) {
+                    if ("[DONE]".equals(data)) {
+                        log.info("[输出结束] Tokens {}", JSON.toJSONString(data));
+                        return;
+                    }
+
+                    ResponseStream response = JSON.parseObject(data, ResponseStream.class);
+                    log.info("测试结果：{}", JSON.toJSONString(response));
+                }
+
+                @Override
+                public void onClosed(EventSource eventSource) {
+                    log.info("对话完成");
+                    countDownLatch.countDown();
+                }
+
+                @Override
+                public void onFailure(EventSource eventSource, @Nullable Throwable t, @Nullable Response response) {
+                    log.error("对话失败", t);
+                    countDownLatch.countDown();
+                }
+            });
+
+            // 等待
+            countDownLatch.await();
+
+        }
 
 
 }

@@ -68,7 +68,7 @@ public class RequestSSE {
  *   暂时仅支持System message、User message，根据role字段进行区分
  */
     private  List<Message> messages;
-//    sse调用填否
+//    fasle为一次返回，true为流式调用
     private boolean stream=false;
 
     {
