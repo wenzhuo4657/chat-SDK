@@ -28,7 +28,7 @@ public class RequestSSE {
     /**
      * 模型
      */
-    private String model = Model.GLM_4.getCode();
+    private String model = ChatGLMModel.GLM_4.getCode();
 
     /**
      * 请求ID
