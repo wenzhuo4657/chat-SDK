@@ -20,6 +20,51 @@ public class ResponseStream {
     private Usage usage;
     private  List<web_Search> web_search;
 
+    public String getId() {
+        return id;
+    }
+
+    public ResponseStream setId(String id) {
+        this.id = id;
+        return this;
+    }
+
+    public Long getCreated() {
+        return created;
+    }
+
+    public ResponseStream setCreated(Long created) {
+        this.created = created;
+        return this;
+    }
+
+    public List<Choice> getChoices() {
+        return choices;
+    }
+
+    public ResponseStream setChoices(List<Choice> choices) {
+        this.choices = choices;
+        return this;
+    }
+
+    public Usage getUsage() {
+        return usage;
+    }
+
+    public ResponseStream setUsage(Usage usage) {
+        this.usage = usage;
+        return this;
+    }
+
+    public List<web_Search> getWeb_search() {
+        return web_search;
+    }
+
+    public ResponseStream setWeb_search(List<web_Search> web_search) {
+        this.web_search = web_search;
+        return this;
+    }
+
     @Data
     public static class Choice {
         private Long index;
