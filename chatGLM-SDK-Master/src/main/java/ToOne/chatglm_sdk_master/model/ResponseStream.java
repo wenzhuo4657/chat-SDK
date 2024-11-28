@@ -77,7 +77,7 @@ public class ResponseStream {
     }
 
     @Data
-    private  static class  delta{
+    public   static class  delta{
         private  String role;
         private  String content;
         private List<tool_calls> tool_calls;
