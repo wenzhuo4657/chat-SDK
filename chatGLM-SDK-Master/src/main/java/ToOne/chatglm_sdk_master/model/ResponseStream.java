@@ -73,7 +73,7 @@ public class ResponseStream {
          * 模型推理终止的原因。
          * */
         private String finishReason;
-        private delta message;
+        private delta delta;
     }
 
     @Data
